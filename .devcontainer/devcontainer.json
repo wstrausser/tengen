@@ -1,0 +1,37 @@
+{
+	"name": "Tengen",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"context": "."
+	},
+    "mounts": [
+		"source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached"
+	],
+	"containerEnv": {
+		"UV_CACHE_DIR": "${containerWorkspaceFolder}/.uv_cache",
+		"TENGEN_DIR": "${containerWorkspaceFolder}"
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"charliermarsh.ruff",
+				"ms-azuretools.vscode-docker",
+                "tamasfe.even-better-toml"
+			],
+			"settings": {
+				"python.linting.pylintEnabled": false,
+				"python.terminal.activateEnvironment": false,
+				"python.analysis.typeCheckingMode": "basic",
+				"files.autoSave": "afterDelay",
+				"files.eol": "auto",
+                "editor.rulers": [
+					88,
+                    120
+				],
+                "autoDocstring.docstringFormat": "google"
+			}
+		}
+	}
+}

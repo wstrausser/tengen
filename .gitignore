@@ -1,0 +1,18 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Caches
+.pytest_cache
+.uv_cache
+
+# Virtual environments
+.venv
+
+# Files for personal use
+todo.txt
+scratch
