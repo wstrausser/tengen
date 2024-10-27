@@ -11,6 +11,7 @@
 		"UV_CACHE_DIR": "${containerWorkspaceFolder}/.uv_cache",
 		"TENGEN_DIR": "${containerWorkspaceFolder}"
 	},
+	"postStartCommand": "bash ${TENGEN_DIR}/.devcontainer/post-start-command.sh",
 	"customizations": {
 		"vscode": {
 			"extensions": [
