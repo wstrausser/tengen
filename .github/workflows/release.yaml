@@ -1,0 +1,54 @@
+name: Bump version
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+      runs-on: ubuntu-latest
+
+      steps:
+        - uses: actions/checkout@v4
+        - run: curl -LsSf https://astral.sh/uv/install.sh | sh
+        - run: uv run pytest
+
+  bump:
+    needs: test
+    runs-on: ubuntu-latest
+    env:
+      TENGEN_DIR: /home/runner/work/tengen/tengen
+    outputs:
+      release_notes: ${{ steps.bump.outputs.release_notes }}
+      release_tag: ${{ steps.get_tag.outputs.release_tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+      - run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - id: bump
+        run: |
+          release_notes="$(uv run cz bump --yes --changelog-to-stdout --git-output-to-stderr)"
+          echo "release_notes<<EOF" >> $GITHUB_OUTPUT
+          echo "$release_notes" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      - id: get_tag
+        run: echo "release_tag=$(git describe --tags)" >> "$GITHUB_OUTPUT"
+      - run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}
+          git push origin main
+
+  github-release:
+    needs: bump
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.bump.outputs.release_tag }}
+          name: ${{ needs.bump.outputs.release_tag }}
+          body: ${{ needs.bump.outputs.release_notes }}

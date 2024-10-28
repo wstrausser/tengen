@@ -1,0 +1,15 @@
+name: Test package
+
+on:
+  push:
+    branches:
+      - "!main"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - run: uv run pytest
