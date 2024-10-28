@@ -1,4 +1,4 @@
-from commitizen.providers import VersionProvider # type: ignore
+from commitizen.providers import VersionProvider  # type: ignore
 from pathlib import Path
 import os
 
@@ -8,6 +8,6 @@ class Provider(VersionProvider):
 
     def get_version(self) -> str:
         return self.file.read_text()
-    
+
     def set_version(self, version: str) -> None:
         self.file.write_text(version)
